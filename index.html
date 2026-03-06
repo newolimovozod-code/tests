@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Panda AI 3D</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<canvas id="canvas3d"></canvas>
+
+<!-- ROOM BACKGROUND -->
+<div id="roomBg"></div>
+<div id="floorReflect"></div>
+
+<!-- CABINET (left wall) -->
+<div id="cabinet" onclick="toggleSkinPanel()">
+  <div class="cab-body">
+    <div class="cab-shelf" style="top:20%"></div>
+    <div class="cab-shelf" style="top:40%"></div>
+    <div class="cab-shelf" style="top:60%"></div>
+    <div class="cab-shelf" style="top:80%"></div>
+    <div class="cab-item" style="top:22%;left:50%;transform:translateX(-50%);animation-delay:0s">🤖</div>
+    <div class="cab-item" style="top:42%;left:50%;transform:translateX(-50%);animation-delay:0.8s">💎</div>
+    <div class="cab-item" style="top:62%;left:50%;transform:translateX(-50%);animation-delay:1.4s">🔮</div>
+    <div class="cab-neon-strip"></div>
+    <div class="cab-label">ГАРДЕРОБ</div>
+  </div>
+</div>
+
+<!-- Skin selector panel -->
+<div id="skinPanel" class="glass">
+  <h3>◈ СКИНЫ ПАНДИ</h3>
+  <div class="skin-opts">
+    <div class="skin-opt active" onclick="setSkin('default')">🐼 Базовый</div>
+    <div class="skin-opt" onclick="setSkin('cyber')">🤖 Кибер</div>
+    <div class="skin-opt" onclick="setSkin('ninja')">🥷 Ниндзя</div>
+    <div class="skin-opt" onclick="setSkin('astro')">🚀 Астро</div>
+  </div>
+</div>
+
+<!-- DIGITAL WINDOW (right wall) -->
+<div id="digitalWindow">
+  <div class="win-bamboo">🎋🌿🎋🌴🎋</div>
+  <div class="win-scanline"></div>
+  <div class="win-label">BAMBOO CAM</div>
+</div>
+
+<!-- HOLOGRAM MEMORY FRAME -->
+<div id="memFrame" onclick="cycleMemory()">
+  <div class="mem-border"></div>
+  <div class="mem-icon" id="memIcon">🧠</div>
+  <div class="mem-label" id="memLabel">ПАМЯТЬ</div>
+</div>
+
+<!-- TERMINAL MINI-GAME -->
+<div id="terminal" onclick="openTermGame()">
+  <div class="term-line"></div>
+  <div class="term-line" style="width:28px;animation-delay:0.4s"></div>
+  <div class="term-cursor"></div>
+</div>
+
+<!-- NEON PULSE overlay -->
+<div id="neonPulse"></div>
+
+<!-- TERMINAL GAME OVERLAY -->
+<div id="termGame">
+  <div class="tg-box glass" style="position:relative">
+    <button class="tg-close" onclick="closeTermGame()">✕</button>
+    <div class="tg-title">◈ ВЗЛОМ ТЕРМИНАЛА</div>
+    <div class="tg-target" id="tgTarget">----</div>
+    <input class="tg-input" id="tgInput" maxlength="4" placeholder="????"/>
+    <div class="tg-score" id="tgScore">⚡ ЭНЕРГИЯ: 0</div>
+    <div class="tg-msg" id="tgMsg"></div>
+  </div>
+</div>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="sp-logo">PANDA.AI</div>
+  <div class="sp-sub">OOLIMOV INDUSTRIES • 3D v4.0</div>
+  <div class="sp-bar"><div class="sp-fill"></div></div>
+  <div class="sp-steps">
+    <div class="sp-step" style="animation-delay:0.5s">▶ ЗАГРУЗКА THREE.JS...</div>
+    <div class="sp-step" style="animation-delay:1.2s">▶ СТРОИМ 3D КОМНАТУ...</div>
+    <div class="sp-step" style="animation-delay:2.0s">▶ ИНИЦИАЛИЗАЦИЯ ПАНДИ...</div>
+    <div class="sp-step" style="animation-delay:2.8s">▶ СИСТЕМА ГОТОВА ✓</div>
+  </div>
+</div>
+
+<!-- WELCOME -->
+<div id="welcomeUI">
+  <div class="w-glass glass">
+    <div class="w-title">ПАНДИ.EXE</div>
+    <div class="w-sub">CYBER FRIEND • UNIT-01</div>
+    <div class="w-speech">Привет! Я Панди 🤖<br>Твой умный 3D-друг!</div>
+    <button class="w-btn" id="startBtn"><span>▶ НАЧАТЬ ДИАЛОГ</span></button>
+  </div>
+</div>
+
+<!-- CHAT UI -->
+<div id="chatUI" style="display:none">
+  <div id="topbar" class="glass">
+    <button class="back-btn" id="backBtn">◄ МЕНЮ</button>
+    <div>
+      <div class="bar-title">ПАНДИ.EXE</div>
+    </div>
+    <div class="bar-stat">
+      <span class="sdot"></span>ОНЛАЙН
+    </div>
+    <button class="sound-btn" id="soundBtn" title="Звук">🔊</button>
+  </div>
+
+  <div id="emoBadge" class="glass">◈ СЧАСТЛИВЫЙ</div>
+
+  <div id="chatBubble" class="glass">
+    <span class="chat-prefix" id="chatPrefix">PANDA.AI OUTPUT</span>
+    <span id="chatText">Привет! О чём поговорим? 🐼</span>
+  </div>
+
+  <div id="chipsRow">
+    <button class="chip" onclick="sq('Расскажи сказку!')">📖 Сказка</button>
+    <button class="chip" onclick="sq('Загадай загадку!')">🧩 Загадка</button>
+    <button class="chip" onclick="sq('Интересный факт!')">⚡ Факт</button>
+    <button class="chip" onclick="sq('Давай поиграем!')">🎮 Игра</button>
+    <button class="chip" onclick="sq('Расскажи шутку!')">😂 Шутка</button>
+  </div>
+
+  <div id="inputBar" class="glass">
+    <input class="msg-in" id="mIn" placeholder="Напиши Панди..." onkeydown="if(event.key==='Enter')send()"/>
+    <button class="go-btn" id="gBtn" onclick="send()">▶</button>
+  </div>
+</div>
+
+<!-- THREE.JS + APP SCRIPT -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
