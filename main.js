@@ -1,6 +1,6 @@
 
 'use strict';
-const SERVER = "https://panda-server-er0a.onrender.com";
+const SERVER = "https://tests-8j3h.onrender.com";
 
 // ═══════════════════════════════════════════
 // AUDIO ENGINE (Web Audio API — no external)
