@@ -930,7 +930,8 @@ function toggleSkinPanel() {
 function setSkin(skin) {
   activeSkin = skin;
   document.querySelectorAll('.skin-opt').forEach(el => el.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.skin-opt').forEach(el => el.classList.remove('active'));
+document.querySelector(`.skin-opt[onclick*="${skin}"]`).classList.add('active');
   const skinColors = {
     default:{ fur:0xf2f2f2, dark:0x111118 },
     cyber:  { fur:0xd0e8ff, dark:0x0a1830 },
